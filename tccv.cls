@@ -62,7 +62,7 @@
 }
 
 % Renders a personal data box:
-\newcommand\personal[5][]{%
+\newcommand\personal[6][]{%
     \needspace{0.5\textheight}%
     \newdimen\boxwidth%
     \boxwidth=\dimexpr\linewidth-2\fboxsep\relax%
@@ -71,7 +71,7 @@
     \ifstrempty{#1}{}{ \faMale & {#1}\smallskip\\}
     \faHome & {#2}\smallskip\\
     \faPhone     & {#3}\smallskip\\
-    \faMailForward      & \href{mailto:#4}{#4} \, | \, \href{#5}{\faGithub}
+    \faMailForward      & \href{mailto:#4}{#4} \, | \, \href{#5}{\faGithub} \, \href{#6}{\faLinkedin}
     \end{tabularx}}}
 \newenvironment{eventlist}{%
     \newcommand*\inskip{}

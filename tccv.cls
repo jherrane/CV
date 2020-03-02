@@ -2,9 +2,21 @@
 \ProvidesClass{tccv}
 \LoadClass[10pt]{scrartcl}
 
+\makeatletter
+\DeclareOldFontCommand{\rm}{\normalfont\rmfamily}{\mathrm}
+\DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\mathsf}
+\DeclareOldFontCommand{\tt}{\normalfont\ttfamily}{\mathtt}
+\DeclareOldFontCommand{\bf}{\normalfont\bfseries}{\mathbf}
+\DeclareOldFontCommand{\it}{\normalfont\itshape}{\mathit}
+\DeclareOldFontCommand{\sl}{\normalfont\slshape}{\@nomath\sl}
+\DeclareOldFontCommand{\sc}{\normalfont\scshape}{\@nomath\sc}
+\makeatother
+
+
 \setcounter{secnumdepth}{-1}
 \RequirePackage[hmargin=1.25cm,vmargin=1.25cm,twocolumn,columnsep=1.25cm]{geometry}
-\RequirePackage{bookman,etoolbox,hyperref,marvosym,needspace,tabularx,xcolor,fontawesome}
+\RequirePackage{fontspec}
+\RequirePackage{bookman,etoolbox,hyperref,marvosym,needspace,tabularx,xcolor,fontawesome5}
 
 \newcommand\ucwords[2][3]{%
     \providecommand\directlua[1]{#2}%
@@ -62,7 +74,7 @@
 }
 
 % Renders a personal data box:
-\newcommand\personal[6][]{%
+\newcommand\personal[5][]{%
     \needspace{0.5\textheight}%
     \newdimen\boxwidth%
     \boxwidth=\dimexpr\linewidth-2\fboxsep\relax%
@@ -71,7 +83,7 @@
     \ifstrempty{#1}{}{ \faMale & {#1}\smallskip\\}
     \faHome & {#2}\smallskip\\
     \faPhone     & {#3}\smallskip\\
-    \faMailForward      & \href{mailto:#4}{#4} \, | \, \href{#5}{\faGithub} \, \href{#6}{\faLinkedin}
+    \faMailForward      & \href{mailto:#4}{#4} \, | \, \href{#5}{\faGithub} \
     \end{tabularx}}}
 \newenvironment{eventlist}{%
     \newcommand*\inskip{}

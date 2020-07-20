@@ -1,200 +1,555 @@
-\documentclass{tccv}
-\usepackage[finnish,english]{babel}
-\usepackage{fontspec} 
-\usepackage[utf8x]{inputenc}
-\usepackage{url}
+%--------------------------------------------------------------------------------------------------%
+%	The MIT License (MIT)
+%
+%	Copyright (c) 2019 Jan Küster
+%
+%	Permission is hereby granted, free of charge, to any person obtaining a copy
+%	of this software and associated documentation files (the "Software"), to deal
+%	in the Software without restriction, including without limitation the rights
+%	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+%	copies of the Software, and to permit persons to whom the Software is
+%	furnished to do so, subject to the following conditions:
+%	
+%	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+%	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+%	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+%	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+%	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+%	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+%	THE SOFTWARE.
+%	
+%
+%--------------------------------------------------------------------------------------------------%
 
-\defaultfontfeatures{Mapping=tex-text}
-\setmainfont{Fontin}
 
-\begin{document}
+\documentclass[10pt,A4]{article}	
+\usepackage[utf8]{inputenc}		
+\usepackage{xstring, xifthen}
 
-\part{Joonas Lauri Jooseppi Herranen}
+% some tex-live fonts - choose your own
 
-\section{Koulutus}
-\begin{yearlist}
-	\item[Teoreettinen fysiikka, \href{https://wiki.helsinki.fi/display/mathstatOpiskelu/Kokonaisuuksien+arvostelu}{arvosana} 4]{22.6.2016}
-	{Filosofian maisteri}
-	{Pro gradu -tutkielman arvosana: Laudatur
-	\href{mailto:registrar@helsinki.fi}{Helsingin yliopisto}}
+%\usepackage[defaultsans]{droidsans}
+%\usepackage[default]{comfortaa}
+%\usepackage{cmbright}
+\usepackage[default]{raleway}
+%\usepackage{fetamont}
+%\usepackage[default]{gillius}
+%\usepackage[light,math]{iwona}
+%\usepackage[thin]{roboto} 
+
+\renewcommand*\familydefault{\sfdefault} 	
+\usepackage[T1]{fontenc}
+\usepackage{moresize}
+\usepackage{fontawesome}
+
+\newcommand{\vcenteredinclude}[1]{\begingroup
+	\setbox0=\hbox{\includegraphics{#1}}%
+	\parbox{\wd0}{\box0}\endgroup}
+
+\newcommand*{\vcenteredhbox}[1]{\begingroup
+	\setbox0=\hbox{#1}\parbox{\wd0}{\box0}\endgroup}
+
+\newcommand{\icon}[3] { 							
+	\makebox(#2, #2){\textcolor{maincol}{\csname fa#1\endcsname}}
+}	
+
+\newcommand{\icontext}[4]{ 						
+	\vcenteredhbox{\icon{#1}{#2}{#3}}  \hspace{2pt}  \parbox{0.9\mpwidth}{\textcolor{#4}{#3}}
+}
+
+\newcommand{\iconhref}[5]{ 						
+	\vcenteredhbox{\icon{#1}{#2}{#5}}  \hspace{2pt} \href{#4}{\textcolor{#5}{#3}}
+}
+
+\newcommand{\iconemail}[5]{ 						
+	\vcenteredhbox{\icon{#1}{#2}{#5}}  \hspace{2pt} \href{mailto:#4}{\textcolor{#5}{#3}}
+}
+
+%----------------------------------------------------------------------------------------
+%	PAGE LAYOUT  DEFINITIONS
+%----------------------------------------------------------------------------------------
+
+% page outer frames (debug-only)
+%\usepackage{showframe}		
+
+% we use paracol to display breakable two columns
+\usepackage{paracol}
+
+\usepackage[a4paper]{geometry}
+\geometry{top=1cm, bottom=1cm, left=1cm, right=1cm}
+
+\usepackage{fancyhdr}
+\pagestyle{empty}
+
+% space between header and content
+% \setlength{\headheight}{0pt}
+
+% indentation is zero
+\setlength{\parindent}{0mm}
+
+\usepackage{array}
+\newcolumntype{x}[1]{%
+	>{\raggedleft\hspace{0pt}}p{#1}}%
+
+\usepackage{graphicx}
+% use this for floating figures
+% \usepackage{wrapfig}
+% \usepackage{float}
+% \floatstyle{boxed} 
+% \restylefloat{figure}
+
+%for drawing graphics		
+\usepackage{tikz}				
+\usetikzlibrary{shapes, backgrounds,mindmap, trees}
+
+\usepackage{transparent}
+\usepackage{color}
+% primary color
+\definecolor{maincol}{RGB}{ 225, 0, 0 }
+% accent color, secondary
+% \definecolor{accentcol}{RGB}{ 250, 150, 10 }
+% dark color
+\definecolor{darkcol}{RGB}{ 70, 70, 70 }
+% light color
+\definecolor{lightcol}{RGB}{245,245,245}
+
+\usepackage[hidelinks]{hyperref}
+
+% returns minipage width minus two times \fboxsep
+% to keep padding included in width calculations
+% can also be used for other boxes / environments
+\newcommand{\mpwidth}{\linewidth-\fboxsep-\fboxsep}
+
+
+
+%============================================================================%
+%
+%	CV COMMANDS
+%
+%============================================================================%
+
+%----------------------------------------------------------------------------------------
+%	 CV LIST
+%----------------------------------------------------------------------------------------
+
+% renders a standard latex list but abstracts away the environment definition (begin/end)
+\newcommand{\cvlist}[1] {
+	\begin{itemize}{#1}\end{itemize}
+}
+
+%----------------------------------------------------------------------------------------
+%	 CV TEXT
+%----------------------------------------------------------------------------------------
+
+% base class to wrap any text based stuff here. Renders like a paragraph.
+% Allows complex commands to be passed, too.
+% param 1: *any
+\newcommand{\cvtext}[1] {
+	\begin{tabular*}{1\mpwidth}{p{0.98\mpwidth}}
+		\parbox{1\mpwidth}{#1}
+	\end{tabular*}
+}
+
+%----------------------------------------------------------------------------------------
+%	CV SECTION
+%----------------------------------------------------------------------------------------
+
+% Renders a a CV section headline with a nice underline in main color.
+% param 1: section title
+\newcommand{\cvsection}[1] {
+	\vspace{14pt}
+	\cvtext{
+		\textbf{\LARGE{\textcolor{darkcol}{\uppercase{#1}}}}\\[-4pt]
+		\textcolor{maincol}{ \rule{0.1\textwidth}{2pt} } \\
+	}
+}
+
+%----------------------------------------------------------------------------------------
+%	META SKILL
+%----------------------------------------------------------------------------------------
+
+% Renders a progress-bar to indicate a certain skill in percent.
+% param 1: name of the skill / tech / etc.
+% param 2: level (for example in years)
+% param 3: percent, values range from 0 to 1
+\newcommand{\cvskill}[3] {
+	\begin{tabular*}{1\mpwidth}{p{0.72\mpwidth}  r}
+		\textcolor{black}{\textbf{#1}} & \textcolor{maincol}{#2}\\
+	\end{tabular*}%
 	
-	\item[Teoreettinen fysiikka]{28.8.2015}
-	{Luonnontieteiden kandidaatti}
-	{Helsingin yliopisto}
-	\item[] {2011}
-	{Ylioppilas}
-	{Karkkilan lukio}
-\end{yearlist}
+	\hspace{4pt}
+	\begin{tikzpicture}[scale=1,rounded corners=2pt,very thin]
+	\fill [lightcol] (0,0) rectangle (1\mpwidth, 0.15);
+	\fill [maincol] (0,0) rectangle (#3\mpwidth, 0.15);
+	\end{tikzpicture}%
+}
 
-\section{Muu koulutus ja erityistaidot}
-\begin{yearlist}
-	\item[Fysiikka, Matematiikka, Kemia,  \hspace{20mm} \linebreak Tietotekniikka]{2019}
-	{Aineenopettaja}
-	{Helsingin yliopisto}
-\end{yearlist}
 
-\subsection{Ohjelmointitaidot}
-\begin{factlist}
-	\item{Erityistaidot}
-	{Fortran, Python, \LaTeX, Matlab, Java, Shell}
-	
-	\item{Hyvät taidot}
-	{SQL, C, HTML}
-\end{factlist}
+%----------------------------------------------------------------------------------------
+%	 CV EVENT
+%----------------------------------------------------------------------------------------
 
-\section{Kielitaito}
-\begin{factlist}
-	\item{Suomi}{Äidinkieli}
-	\item{Englanti}{Erinomainen}
-	\item{Ruotsi}{Virkamiesruotsi}
-	\item{Japani}{Perusteet}
-\end{factlist}
-
-\section{Palkinnot ja huomionosoitukset}
-\begin{yearlist}
-	\item{2016}
-	{Pro gradu -palkinto, 500€}
-	{Matemaattis-luonnontieteellinen tiedekunta, Helsingin yliopisto}
-	\item{2013, 2015}
-	{Opintostipendi, 950€}
-	{Hämäläisten ylioppilaiden säätiö}	
-	\item{2013, 2015}
-	{Apuraha perustutkinto-opiskelijalle, 1000€}
-	{Matematiikan ja luonnontieteiden rahasto}	
-	\item{2011}
-	{Kansainvälisten kemiaolympialaisten pronssimitali}
-	{IChO 2011}	
-\end{yearlist}
-
-\personal
-[1.7.1992, Helsinki, Suomi]
-{Abraham Wetterin tie 14 C 37, 00880 Helsinki}
-{+358 45 356 2399}
-{joonas.herranen@helsinki.fi}
-{https://www.github.com/jherrane}
-
-\section{Työkokemus}
-\begin{eventlist}	
-	\item{Elokuu 2016 -- }
-	{Helsingin yliopisto, Fysiikan laitos}
-	{Tohtorikoulutettava}
+% Renders a table and a paragraph (cvtext) wrapped in a parbox (to ensure minimum content
+% is glued together when a pagebreak appears).
+% Additional Information can be passed in text or list form (or other environments).
+% the work you did
+% param 1: time-frame i.e. Sep 14 - Jan 15 etc.
+% param 2:	 event name (job position etc.)
+% param 3: Customer, Employer, Industry
+% param 4: Short description
+% param 5: work done (optional)
+% param 6: technologies include (optional)
+% param 7: achievements (optional)
+\newcommand{\cvevent}[4] {
 	
-	Sähkömagneettisen säteilyn siroaminen avaruuden pienhiukkasista. Siroamisen ja hiukkasen dynamiikan kytkeytymistä käsittelevän ohjelmistokehyksen kehittäminen ja testaaminen. Ohjelmistokehyksen soveltaminen polarisaatiotutkimuken avoimiin ongelmiin.
-	
-	\item{Syyskuu 2014 -- Lokakuu 2018}
-	{Ursa ry}
-	{Kerhonohjaaja}
-	
-	Kerho- ja kurssimuotoisen matematiikan ja fysiikan intensiiviopetuksen suunnittelu ja järjestäminen. Intensiiviopetuksen menetelmien kehittäminen. 
-	
-	\item{Kesäkuu -- Lokakuu 2015}
-	{Helsingin yliopisto, Fysiikan laitos}
-	{Tutkimusavustaja}
-	
-	Tähtienvälisen väliaineen hiukkasten asemoitumisen teoreettinen tarkastelu. Teorian mukaisen ohjelmistokehyksen kehitystyö ja pro gradu -tutkielmassa hyödynnettyjen ohjelmistojen kehitys sekä testaus.
-	
-	\item{Kesäkuu -- Lokakuu 2014}
-	{Maanpuolustuskorkeakoulu, Sotatekniikan laitos}
-	{Korkeakouluharjoittelija}
-	
-	Suomalaisen kriittisen infrastruktuurin tutkimus ja da\-tan\-ke\-ruun perusteella infrastruktuurin riippuvuussuhteiden ja vikasietoisuuden mallintaminen.
-	
-\end{eventlist}
-\pagebreak
-
-% ENGLISH 
-\begin{otherlanguage}{english}
-
-\partEng{Joonas Lauri Jooseppi Herranen}
-
-\section{Education}
-\begin{yearlist}
-	\item[Theoretical physics, overall \href{https://www.helsinki.fi/en/grading}{grade} 4]{Jun 22 2016}
-	{Master of Science}
-	{\href{https://www.helsinki.fi/en/grading}{Grade} of Master's thesis: Laudatur
+	% we wrap this part in a parbox, so title and description are not separated on a pagebreak
+	% if you need more control on page breaks, remove the parbox
+	\parbox{\mpwidth}{
+		\begin{tabular*}{1\mpwidth}{p{0.72\mpwidth}  r}
+			\textcolor{black}{\textbf{#2}} & \colorbox{maincol}{\makebox[0.25\mpwidth]{\textcolor{white}{#1}}} \\
+			\textcolor{maincol}{\textbf{#3}} & \\
+		\end{tabular*}\\[8pt]
 		
-		\href{mailto:registrar@helsinki.fi}{University of Helsinki}}
+		\ifthenelse{\isempty{#4}}{}{
+			\cvtext{#4}\\
+		}
+	}
 	
-	\item[Theoretical physics]{Aug 28 2015}
-	{Bachelor of Science}
-	{University of Helsinki}
-\end{yearlist}
+	\vspace{14pt}
+}
 
-\section{Other education and special training}
-\begin{yearlist}
-	\item[Physics, Mathematics, Chemistry, IT]{2019}
-	{Subject teacher in secondary level}
-	{University of Helsinki}
-\end{yearlist}
+%----------------------------------------------------------------------------------------
+%	 CV META EVENT
+%----------------------------------------------------------------------------------------
 
-\subsection{IT skills}
-\begin{factlist}
-	\item{Special expertise}
-	{Fortran, Python, \LaTeX, Matlab, Java, Shell}
+% Renders a CV event on the sidebar
+% param 1: title
+% param 2: subtitle (optional)
+% param 3: customer, employer, etc,. (optional)
+% param 4: info text (optional)
+\newcommand{\cvmetaevent}[4] {
+	\textcolor{maincol} {\cvtext{\textbf{\begin{flushleft}#1\end{flushleft}}}}
 	
-	\item{Good skills}
-	{SQL, C, HTML}
-\end{factlist}
+	\ifthenelse{\isempty{#2}}{}{
+		\textcolor{darkcol} {\cvtext{\textbf{#2}}\\[-12pt] }
+	}
+	
+	\ifthenelse{\isempty{#3}}{}{
+		\cvtext{{ \textcolor{darkcol} {#3} }}\\[-7.5pt]
+	}
+	
+	\cvtext{#4}\\[10pt]
+}
 
-\section{Language proficiency}
-\begin{factlist}
-	\item{Finnish}{Native}
-	\item{English}{Fluent}
-	\item{Swedish}{Bureaucratese}
-	\item{Japanese}{Basics}
-\end{factlist}
+%---------------------------------------------------------------------------------------
+%	QR CODE
+%----------------------------------------------------------------------------------------
 
-\section{Honors}
-\begin{yearlist}
-	\item{2016}
-	{Pro gradu -award for exceptional Master's thesis, 500€}
-	{Faculty of Science, University of Helsinki}
-	\item{2013, 2015}
-	{Study grant, 950€}
-	{The Häme Students Foundation}	
-	\item{2013, 2015}
-	{Undergraduate grant, 1000€}
-	{Fund for mathematics and natural sciences}	
-	\item{2011}
-	{Bronze medal in the International Chemistry Olympiad}
-	{IChO 2011}	
-\end{yearlist}
+% Renders a qrcode image (centered, relative to the parentwidth)
+% param 1: percent width, from 0 to 1
+\newcommand{\cvqrcode}[1] {
+	\begin{center}
+		\includegraphics[width={#1}\mpwidth]{qrcode}
+	\end{center}
+}
 
-\personal
-[July 1, 1992, Helsinki, Suomi]
-{Abraham Wetterin tie 14 C 37, 00880 Helsinki}
-{+358 45 356 2399}
-{joonas.herranen@helsinki.fi}
-{https://www.github.com/jherrane}
 
-\section{Vocational experience}
-\begin{eventlist}	
-	\item{Aug 2016 -- }
-	{University of Helsinki, Department of Physics}
-	{Doctoral student}
-	
-	The study of electromagnetic scattering from small space dust particles. Development and testing of a software framework for solving the scattering-dynamical interaction in the dust particles. Application in studying the open problems in dust polarization observations.
-	
-	\item{Sept 2014 -- Oct 2018}
-	{Ursa ry}
-	{Science instructor}
-	
-	Planning, organisation and execution of intensive tuition of mathematics and physics. Development of intensive education methods.
-	
-	\item{Jun -- Oct 2015}
-	{University of Helsinki, Department of Physics}
-	{Research assistant}
-	
-	Theoretical review of the alignment of particles in the interstellar medium. Development of a software framework based on the theory. Development and testing of the sotware used in the Master's thesis on the subject.
-	
-	\item{Jun -- Oct 2014}
-	{National Defense University, \hspace*{2in} \linebreak
-	Department of Military Technology}
-	{University trainee}
-	
-	Study and data collection of Finnish critical infrastructure. Modeling of the dependencies and fault tolerance of the infrastructure based on the data.
-	
-\end{eventlist}
-\end{otherlanguage}
-
+%============================================================================%
+%
+%
+%
+%	DOCUMENT CONTENT
+%
+%
+%
+%============================================================================%
+\begin{document}
+	\columnratio{0.31}
+	\setlength{\columnsep}{2.2em}
+	\setlength{\columnseprule}{4pt}
+	\colseprulecolor{lightcol}
+	\begin{paracol}{2}
+		\begin{leftcolumn}
+			
+			\cvsection{Personal \\[2pt]information}
+			
+			\vspace*{-4pt}
+			\icontext{MapMarker}{12}{\small Abraham Wetterin tie 14 C 37\\00880 Helsinki, Finland}{black}\\[3pt]
+			\icontext{MobilePhone}{12}{\small +358 45 356 2399}{black}\\[3pt]
+			\iconemail{Envelope}{12}{\small joonas.herranen@iki.fi}{joonas.herranen@iki.fi}{black}\\[-15pt]
+			
+			\cvsection{Research \\[4pt]profile}
+			\\[-15pt]
+			\cvmetaevent
+			{Numerical light scattering}
+			{}
+			{}
+			{\footnotesize Development and application of a state-of-the-art efficient scattering solver for irregular scatterers, modelling especially the dynamical effects of radiation ie. forces and torques due to scattering. }
+			\\[-15pt]
+			\cvmetaevent
+			{Cosmic dust}
+			{}
+			{}
+			{\footnotesize Modelling shapes of dust grains and aggregates and their scattering properties is an integral part of e.g. understanding the radiative torque theory of dust and, further, the polarization of scattered and emitted light by dust.}
+			\\[-15pt]
+			\cvmetaevent
+			{Optical tweezers}
+			{}
+			{}
+			{\footnotesize Full dynamical simulations allow modelling optical tweezers, where small particles can be suspended and manipulated by light.}\\[-20pt]
+			
+			\cvsection{EDUCATION}
+			\\[-15pt]
+			\cvmetaevent
+			{2016 -- Aug 2020 (planned)}
+			{PhD Astronomy}
+			{University of Helsinki}
+			{\footnotesize Research under the supervision of prof. Karri Muinonen
+			}\\[-15pt]
+			\cvmetaevent
+			{2015 -- 2016}
+			{MSc Theoretical Physics}
+			{University of Helsinki}
+			{\footnotesize \href{https://studies.helsinki.fi/instructions/article/grades-and-assessment}{Overall grade 4/5}\\
+				
+				My MSc thesis, belonging to the field of astronomy, served as the starting point to my PhD research, and as such earned the grade of Laudatur.
+			}
+			\\[-15pt]
+			\cvmetaevent
+			{2012 -- 2015}
+			{BSc Theoretical Physics}
+			{}
+			{University of Helsinki}\\[-30pt]
+			
+			\cvsection{Other \\[4pt] education}
+			\\[-15pt]
+			\cvmetaevent
+			{2015 -- 2019}
+			{Subject teacher}
+			{University of Helsinki}
+			{\footnotesize I am a qualified teacher of Physics, Mathematics, Chemistry and IT up to the secondary (high) school level in Finland.
+			}
+			
+			\cvsection{SKILLS}
+			
+			\cvskill{\small Fortran, Python,
+				Matlab} {5+ yrs} {1} \\[-2pt]
+			
+			\cvskill{\small Linux, Git} {4+ yrs} {0.95} \\[-2pt]
+			
+			\cvskill{\small Linux, Git, \LaTeX} {4+ yrs} {0.95} \\[-2pt]
+			
+			\cvskill{\small Html/CSS, SQL} {3+ yrs} {0.66} \\[-2pt]
+			
+			\cvsection{Language \\proficiency}
+			
+			\cvskill{Finnish}{Native}{} \\[-2pt]
+			
+			\cvskill{English}{Fluent}{0.95} \\[-2pt]
+			
+			\cvskill{Swedish}{\hspace{-38pt}Bureaucratese}{0.5} \\[-2pt]
+			
+			\cvskill{Japanese}{\hspace{-40pt}Conversational}{0.4} \\[-2pt]
+			
+			\cvsection{Additional \\activities}
+			\vspace*{-15pt}
+			\cvmetaevent
+			{2020}
+			{The Night of Science}
+			{Bad Sci-Fi Night}
+			{\small A popular science lecture on science fiction tropes and related physics.}
+			
+			\vspace*{-15pt}
+			\cvmetaevent
+			{2018, 2019}
+			{International Asteroid Day}
+			{}
+			{\vspace*{4pt}\small Organizer at the Helsinki Observatory's exhibition for general public as a part of the international event.}
+			%\mbox{} % hotfix to place qrcode on the bottom when there are not other elements
+			
+		\end{leftcolumn}
+		\begin{rightcolumn}
+			
+			\fcolorbox{white}{darkcol}{\begin{minipage}[c][2.cm][c]{1\mpwidth}
+					\begin {center}
+					\huge{ \textbf{ \textcolor{white}{ \uppercase{Joonas Herranen} } } } \\[4pt]
+					\large{ \textcolor{white} {Curriculum Vitae} }
+					\end {center}
+			\end{minipage}} 
+			
+			\cvsection{Publications}
+			
+			\cvtext{
+				
+				Herranen, J. 2020, \emph{\href{https://doi.org/10.3847/1538-4357/ab8009}{Rotational disruption of nonspherical cometary dust particles by radiative torques}}, Astrophysical Journal, 893, 109. \\
+				
+				Herranen, J., Markkanen, J., Videen, G., \& Muinonen, K. 2019, \emph{\href{https://doi.org/10.1371/journal.pone.0225773}{Non-spherical particles in optical tweezers: a numerical solution}}, PLOS ONE, 12(14): e0225773.\\
+				
+				Herranen, J., Lazarian, A., \& Hoang, T. 2019, \emph{\href{https://doi.org/10.3847\%2F1538-4357\%2Fab1eb3}{Radiative torques of irregular grains: describing the alignment of a grain ensemble}}, Astrophysical Journal, 878, 96.\\
+				
+				Herranen, J., Markkanen, J., \& Muinonen, K. 2018, \emph{\href{https://doi.org/10.1016/j.jqsrt.2017.09.033}{Polarized scattering by Gaussian random particles under radiative torques}}, Journal of Quantitative Spectroscopy and Radiative Transfer, 205, 40.\\
+				
+				Herranen, J., Markkanen, J., \& Muinonen, K. 2017, \emph{\href{https://doi.org/10.1002/2017RS006333}{Dynamics of small particles in electromagnetic radiation fields: A numerical solution}}, Radio Science, 52, 1016.
+				
+			}
+			
+			\cvsection{Other publications}
+			
+			\cvtext{
+				
+				Herranen, J., \& Lazarian, A. 2020, \emph{Alignment of irregular grains by radiative torques: efficiency study}, Astrophysical Journal, submitted.\\
+				
+				Herranen, J., Markkanen, J., \& Muinonen, K. (2016). \emph{\href{https://doi.org/10.1109/URSI-EMTS.2016.7571366}{Dynamics of Interstellar Dust Particles in Electromagnetic Radiation Fields}} in 2016 URSI INTERNATIONAL SYMPOSIUM ON ELECTROMAGNETIC THEORY (EMTS) (p. 251-254). New York: IEEE.
+				
+			}
+			
+			\cvsection{Grants and fellowships}
+			
+			\cvevent
+			{2017 -- 2020}
+			{UH funded salary position for a PhD candidate}
+			{University of Helsinki}
+			{}
+			\vspace{-15pt}
+			\cvevent
+			{2015, 2013}
+			{Study grant}
+			{Student's foundation of Tavastia Nation}
+			{}
+			\vspace{-15pt}
+			\cvevent
+			{2015, 2013}
+			{Undergraduate grant}
+			{Fund for Mathematics and Natural Sciences}
+			{}
+			
+			\vspace{-25pt}
+			\cvsection{Awards and honors}
+			\cvevent
+			{2016}
+			{Pro Gradu award exceptional MSc thesis}
+			{Faculty of Science, University of Helsinki}
+			{}
+			\vspace{-15pt}
+			\cvevent
+			{2011}
+			{Bronze medal in the International Chemistry Olympiad}
+			{IChO 2011}
+			{}
+			
+			\newpage
+			\cvsection{Conferences}
+			
+			\cvevent
+			{2020}
+			{European Planetary Science Conference}
+			{Virtual conference}
+			{}
+			\vspace*{-15pt}
+			\cvevent
+			{2019}
+			{European Planetary Science Conference / Annual Meeting for Division for Planetary Sciences joint conference}
+			{Geneva, Switzerland}
+			{}
+			\vspace*{-15pt}
+			\cvevent
+			{2018, 2019}
+			{Cosmic Dust}
+			{Sagamihara, Japan; Narashino, Japan}
+			{}
+			\vspace*{-15pt}
+			\cvevent
+			{2018}
+			{Electromagnetic and Light Scattering XVII / Laser-Light and Interactions with Particles 2018 joint conference}
+			{College Station, TX}
+			{}
+			\vspace*{-15pt}
+			\cvevent
+			{2017}
+			{European Planetary Science Conference}
+			{Riga, Latvia}
+			{}
+			\vspace*{-15pt}
+			\cvevent
+			{2017}
+			{Electromagnetic and Light Scattering XVI}
+			{College Park, MD}
+			{}
+			\vspace*{-15pt}
+			\cvevent
+			{2017}
+			{Bremen Workshop on Light Scattering}
+			{Bremen, Germany}
+			{}
+			\vspace*{-15pt}
+			\cvevent
+			{2016}
+			{Annual Meeting for Division for Planetary Sciences/ European Planetary Science Conference joint conference}
+			{Pasadena, CA}
+			{}
+			\vspace*{-15pt}
+			\cvevent
+			{2016}
+			{Electromagnetic Theory Symposium}
+			{Espoo, Finland}
+			{}
+			\vspace*{-15pt}
+			
+			\vspace*{-10pt}
+			\cvsection{Teaching experience}
+			\cvevent
+			{2020}
+			{Statistical Inversion Methods}
+			{Assistant teacher}
+			{}
+			\vspace*{-15pt}
+			\cvevent
+			{2020}
+			{Solar System Physics}
+			{Assistant teacher}
+			{}
+			\vspace*{-15pt}
+			\cvevent
+			{2018,2019}
+			{Fundamentals of Astronomy I}
+			{Assistant teacher}
+			{}
+			\vspace*{-15pt}
+			\cvevent
+			{2018}
+			{Fundamentals of Astronomy II}
+			{Assistant teacher}
+			{}
+			\vspace*{-15pt}
+			\cvevent
+			{2016,2019}
+			{Electromagnetic Scattering I}
+			{Assistant teacher}
+			{}
+			\vspace*{-15pt}
+			
+			\vspace*{-10pt}
+			\cvsection{Research experience}
+			\cvevent
+			{2019}
+			{Visiting researcher}
+			{University of Wisconsin/Madison}
+			{Two-month research visit to prof. A. Lazarian, focussed on improving the predictivity of radiative torque theory.}
+			\vspace*{-15pt}
+			\cvevent
+			{2016 -- 2020}
+			{Doctoral student}
+			{University of Helsinki}
+			{}
+			% hotfixes to create fake-space to ensure the whole height is used
+			%\mbox{}
+			%\vfill
+			%\mbox{}
+			%\vfill
+			%\mbox{}
+			%\vfill
+			%\mbox{}
+		\end{rightcolumn}
+	\end{paracol}
 \end{document}
+

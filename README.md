@@ -2,4 +2,4 @@
 Curriculum Vitae -template for Finnish and English CVs
 
 ## Compilation
-Compile with XeLaTeX. Should be straightforward...
+No extra fancy things needed for this academic CV.

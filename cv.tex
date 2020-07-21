@@ -24,7 +24,7 @@
 \usepackage[utf8]{inputenc}		
 \usepackage{xstring, xifthen}
 
-\usepackage{ebgaramond-maths}
+\usepackage{CormorantGaramond}
 
 \usepackage[T1]{fontenc}
 \usepackage{moresize}
@@ -198,7 +198,63 @@
 	
 	\cvtext{#4}\\[10pt]
 }
+\usepackage{afterpage}
+%----------------------------------------------------------------------------------------
+%	 References
+%----------------------------------------------------------------------------------------
+\newcommand{\references}{
+%	\newpage
+%	\vspace*{2in}
+	\afterpage{%
+		\newgeometry{top=5cm, bottom=3cm, left=3cm, right=2cm}
+		\cvsection{References}
+		
+		\cvtext{
+			list of references
+		}
+		\restoregeometry
+	} 
+	
+}
 
+%----------------------------------------------------------------------------------------
+%	 Cover letter
+%----------------------------------------------------------------------------------------
+\newcommand{\coverletter}{
+
+\afterpage{%
+	\newgeometry{top=3cm, bottom=3cm, left=2cm, right=2cm}
+	\cvtext{
+		\flushright
+		\today\\[10pt]
+		
+		University of Helsinki\\
+		Department of Physics\\
+		Gustaf Hällströmin katu 2\\
+		PL 64, Helsinki, Finland\\
+		\href{mailto:joonas.herranen@helsinki.fi}{joonas.herranen@iki.fi}
+		
+		\flushleft 
+
+		\cvtext{
+			\Large{
+				Position\\[2pt]
+			}
+			\large{
+				Location\\
+				Location\\
+			}
+		
+			Dear ...,
+			
+			
+		}
+	}
+	\restoregeometry
+} 
+
+	
+}
 
 \begin{document}
 	\columnratio{0.31}
@@ -496,7 +552,9 @@
 			%\mbox{}
 		\end{rightcolumn}
 	\end{paracol}
-	\newpage
+	
+	\references
+	\coverletter
 	
 \end{document}
 

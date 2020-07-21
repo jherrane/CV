@@ -210,7 +210,20 @@
 		\cvsection{References}
 		
 		\cvtext{
-			list of references
+			My advisor, professor Karri Muinonen\\
+			Department of Physics\\
+			University of Helsinki\\
+			\href{mailto:karri.muinonen@helsinki.fi}{karri.muinonen@helsinki.fi}\\
+			
+			Frequent collaborator, professor Alex Lazarian\\
+			Department of Astronomy\\
+			University of Wisconsin/Madison\\
+			\href{mailto:alazarian@facstaff.wisc.edu}{alazarian@facstaff.wisc.edu}\\
+			
+			Collaborator, Dr. Gorden Videen\\
+			Army Research Laboratory\\
+			Maryland, US\\
+			\href{mailto:gorden.videen@gmail.com}{gorden.videen@gmail.com}
 		}
 		\restoregeometry
 	} 
@@ -220,41 +233,65 @@
 %----------------------------------------------------------------------------------------
 %	 Cover letter
 %----------------------------------------------------------------------------------------
-\newcommand{\coverletter}{
-
-\afterpage{%
-	\newgeometry{top=3cm, bottom=3cm, left=2cm, right=2cm}
-	\cvtext{
-		\flushright
-		\today\\[10pt]
-		
-		University of Helsinki\\
-		Department of Physics\\
-		Gustaf Hällströmin katu 2\\
-		PL 64, Helsinki, Finland\\
-		\href{mailto:joonas.herranen@helsinki.fi}{joonas.herranen@iki.fi}
-		
-		\flushleft 
-
+\newcommand{\coverletter}{	
+	\afterpage{%
+		\newgeometry{top=3cm, bottom=3cm, left=2cm, right=2cm}
 		\cvtext{
-			\Large{
-				Position\\[2pt]
-			}
-			\large{
-				Location\\
-				Location\\
-			}
-		
-			Dear ...,
+			\flushright
+			\today\\[10pt]
 			
+			University of Helsinki\\
+			Department of Physics\\
+			Gustaf Hällströmin katu 2\\
+			PL 64, Helsinki, Finland\\
+			\href{mailto:joonas.herranen@helsinki.fi}{joonas.herranen@iki.fi}
 			
-		}
-	}
-	\restoregeometry
-} 
-
+			\flushleft 
 	
+			\cvtext{
+				\Large{
+					Post doc position (F*M), job ID: IWF035PD220\\[2pt]
+				}
+				\large{
+					Space Research Institute (IWF)\\
+					Austrian Academy of Sciences\\
+				}
+			
+				Dear Dr. Mannel,\\
+				
+				I apply for the post doc position mentioned in the title. I defend my thesis, titled \emph{Dynamical response of small particles to light scattering}, on August 25th, 2020, with Dr. B-G Andersson as my opponent. \\
+				
+				My research, as my teaching, experience focusses on numerical light scattering methods, applied to cosmic dust and other small particles, including cometary dust and particles trapped in optical tweezers. The main computational tools I have used are Fortran (numerical light scattering) and Python (input data and particle shape generation, data analysis and visualization). I also have a solid understanding of the electromagnetic theory.\\
+				
+				I earned all my academic degrees in the University of Helsinki. During my time there, I have extensively studied theoretical physics, physics, mathematics, and chemistry. In addition I am a fully qualified teacher up to the secondary level in Finland. The extensive coverage of my knowledge is a strength and allows me to collaborate in many things, even if it means relative lack of depth of knowledge in fields other than my own expertise, scattering and dynamics of small particles.\\
+				
+				In the near future, I expect to pursue new research goals. New vantage points will hopefully strengthen my qualities as a scientist.\\
+				
+				After my graduation, I will append the application with my study certificates.\\
+				
+				\flushright
+				Sincerely,\\[15pt]
+				\includegraphics[width=0.23\mpwidth]{sign}\\
+				Joonas Herranen 
+				
+				\flushleft
+			\textit{	Attachments:\\
+				1) Study transcript from the University of Helsinki}
+			}
+		}
+		\restoregeometry
+	}
 }
+
+\usepackage{pdfpages}
+\newcommand{\attachments}{
+	\afterpage{
+		\newgeometry{top=3cm, bottom=3cm, left=2cm, right=2cm}
+		\cvsection{Attachment 1: Transcript}
+		\includepdf[pages={1-7}]{transcript.pdf}
+	}	
+}
+
 
 \begin{document}
 	\columnratio{0.31}
@@ -555,6 +592,7 @@
 	
 	\references
 	\coverletter
+	\attachments
 	
 \end{document}
 

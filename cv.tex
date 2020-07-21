@@ -20,24 +20,12 @@
 %	
 %
 %--------------------------------------------------------------------------------------------------%
-
-
-\documentclass[10pt,A4]{article}	
+\documentclass[11pt,A4]{article}	
 \usepackage[utf8]{inputenc}		
 \usepackage{xstring, xifthen}
 
-% some tex-live fonts - choose your own
+\usepackage{ebgaramond-maths}
 
-%\usepackage[defaultsans]{droidsans}
-%\usepackage[default]{comfortaa}
-%\usepackage{cmbright}
-\usepackage[default]{raleway}
-%\usepackage{fetamont}
-%\usepackage[default]{gillius}
-%\usepackage[light,math]{iwona}
-%\usepackage[thin]{roboto} 
-
-\renewcommand*\familydefault{\sfdefault} 	
 \usepackage[T1]{fontenc}
 \usepackage{moresize}
 \usepackage{fontawesome}
@@ -57,8 +45,8 @@
 	\vcenteredhbox{\icon{#1}{#2}{#3}}  \hspace{2pt}  \parbox{0.9\mpwidth}{\textcolor{#4}{#3}}
 }
 
-\newcommand{\iconhref}[5]{ 						
-	\vcenteredhbox{\icon{#1}{#2}{#5}}  \hspace{2pt} \href{#4}{\textcolor{#5}{#3}}
+\newcommand{\iconhref}[4]{ 						
+	\vcenteredhbox{\icon{#1}{#2}{black}}  \hspace{2pt} \href{#4}{{#3}}
 }
 
 \newcommand{\iconemail}[5]{ 						
@@ -100,27 +88,32 @@
 
 %for drawing graphics		
 \usepackage{tikz}				
-\usetikzlibrary{shapes, backgrounds,mindmap, trees}
+\usetikzlibrary{shapes, backgrounds, mindmap, trees}
 
 \usepackage{transparent}
 \usepackage{color}
 % primary color
-\definecolor{maincol}{RGB}{ 225, 0, 0 }
+\definecolor{maincol}{RGB}{ 169, 10, 10 }
 % accent color, secondary
-% \definecolor{accentcol}{RGB}{ 250, 150, 10 }
+ \definecolor{accentcol}{RGB}{ 250, 150, 10 }
 % dark color
-\definecolor{darkcol}{RGB}{ 70, 70, 70 }
+%\definecolor{darkcol}{RGB}{ 10, 100, 100 }
+\definecolor{darkcol}{rgb}{0.23, 0.27, 0.29}
 % light color
 \definecolor{lightcol}{RGB}{245,245,245}
 
 \usepackage[hidelinks]{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=darkcol,
+}
 
 % returns minipage width minus two times \fboxsep
 % to keep padding included in width calculations
 % can also be used for other boxes / environments
 \newcommand{\mpwidth}{\linewidth-\fboxsep-\fboxsep}
-
-
 
 %============================================================================%
 %
@@ -131,8 +124,6 @@
 %----------------------------------------------------------------------------------------
 %	 CV LIST
 %----------------------------------------------------------------------------------------
-
-% renders a standard latex list but abstracts away the environment definition (begin/end)
 \newcommand{\cvlist}[1] {
 	\begin{itemize}{#1}\end{itemize}
 }
@@ -140,10 +131,6 @@
 %----------------------------------------------------------------------------------------
 %	 CV TEXT
 %----------------------------------------------------------------------------------------
-
-% base class to wrap any text based stuff here. Renders like a paragraph.
-% Allows complex commands to be passed, too.
-% param 1: *any
 \newcommand{\cvtext}[1] {
 	\begin{tabular*}{1\mpwidth}{p{0.98\mpwidth}}
 		\parbox{1\mpwidth}{#1}
@@ -153,13 +140,10 @@
 %----------------------------------------------------------------------------------------
 %	CV SECTION
 %----------------------------------------------------------------------------------------
-
-% Renders a a CV section headline with a nice underline in main color.
-% param 1: section title
 \newcommand{\cvsection}[1] {
 	\vspace{14pt}
 	\cvtext{
-		\textbf{\LARGE{\textcolor{darkcol}{\uppercase{#1}}}}\\[-4pt]
+		\textbf{\LARGE{\textcolor{darkcol}{{#1}}}}\\[-4pt]
 		\textcolor{maincol}{ \rule{0.1\textwidth}{2pt} } \\
 	}
 }
@@ -167,11 +151,6 @@
 %----------------------------------------------------------------------------------------
 %	META SKILL
 %----------------------------------------------------------------------------------------
-
-% Renders a progress-bar to indicate a certain skill in percent.
-% param 1: name of the skill / tech / etc.
-% param 2: level (for example in years)
-% param 3: percent, values range from 0 to 1
 \newcommand{\cvskill}[3] {
 	\begin{tabular*}{1\mpwidth}{p{0.72\mpwidth}  r}
 		\textcolor{black}{\textbf{#1}} & \textcolor{maincol}{#2}\\
@@ -188,22 +167,7 @@
 %----------------------------------------------------------------------------------------
 %	 CV EVENT
 %----------------------------------------------------------------------------------------
-
-% Renders a table and a paragraph (cvtext) wrapped in a parbox (to ensure minimum content
-% is glued together when a pagebreak appears).
-% Additional Information can be passed in text or list form (or other environments).
-% the work you did
-% param 1: time-frame i.e. Sep 14 - Jan 15 etc.
-% param 2:	 event name (job position etc.)
-% param 3: Customer, Employer, Industry
-% param 4: Short description
-% param 5: work done (optional)
-% param 6: technologies include (optional)
-% param 7: achievements (optional)
 \newcommand{\cvevent}[4] {
-	
-	% we wrap this part in a parbox, so title and description are not separated on a pagebreak
-	% if you need more control on page breaks, remove the parbox
 	\parbox{\mpwidth}{
 		\begin{tabular*}{1\mpwidth}{p{0.72\mpwidth}  r}
 			\textcolor{black}{\textbf{#2}} & \colorbox{maincol}{\makebox[0.25\mpwidth]{\textcolor{white}{#1}}} \\
@@ -221,12 +185,6 @@
 %----------------------------------------------------------------------------------------
 %	 CV META EVENT
 %----------------------------------------------------------------------------------------
-
-% Renders a CV event on the sidebar
-% param 1: title
-% param 2: subtitle (optional)
-% param 3: customer, employer, etc,. (optional)
-% param 4: info text (optional)
 \newcommand{\cvmetaevent}[4] {
 	\textcolor{maincol} {\cvtext{\textbf{\begin{flushleft}#1\end{flushleft}}}}
 	
@@ -241,17 +199,6 @@
 	\cvtext{#4}\\[10pt]
 }
 
-%---------------------------------------------------------------------------------------
-%	QR CODE
-%----------------------------------------------------------------------------------------
-
-% Renders a qrcode image (centered, relative to the parentwidth)
-% param 1: percent width, from 0 to 1
-\newcommand{\cvqrcode}[1] {
-	\begin{center}
-		\includegraphics[width={#1}\mpwidth]{qrcode}
-	\end{center}
-}
 
 \begin{document}
 	\columnratio{0.31}
@@ -261,77 +208,78 @@
 	\begin{paracol}{2}
 		\begin{leftcolumn}
 			
-			\cvsection{Personal \\[2pt]information}
+			\cvsection{Personal information}
 			
 			\vspace*{-4pt}
-			\icontext{Male}{12}{\small 1 July 1992, Helsinki, Finland}{black}\\[3pt]
-			\icontext{MapMarker}{12}{\small Abraham Wetterin tie 14 C 37\\00880 Helsinki, Finland}{black}\\[3pt]
-			\icontext{MobilePhone}{12}{\small +358 45 356 2399}{black}\\[3pt]
-			\iconemail{Envelope}{12}{\small joonas.herranen@iki.fi}{joonas.herranen@iki.fi}{black}\\[3pt]
-			\iconhref{Github}{12}{github.com/jherrane}{https://github.com/jherrane}{black}\\[-15pt]
+			\icontext{Male}{12}{ 1 July 1992, Helsinki, Finland}{black}\\[3pt]
+			\icontext{MapMarker}{12}{ Abraham Wetterin tie 14 C 37\\00880 Helsinki, Finland}{black}\\[3pt]
+			\icontext{MobilePhone}{12}{ +358 45 356 2399}{black}\\[3pt]
+			\iconemail{Envelope}{12}{ joonas.herranen@iki.fi}{joonas.herranen@iki.fi}{black}\\[3pt]
+			\iconhref{Github}{12}{github.com/jherrane}{https://github.com/jherrane}\\[-15pt]
 			
-			\cvsection{Research \\[4pt]profile}
+			\cvsection{Research profile}
 			\\[-15pt]
 			\cvmetaevent
 			{Numerical light scattering}
 			{}
 			{}
-			{\footnotesize Development and application of a state-of-the-art efficient scattering solver for irregular scatterers, modelling especially the dynamical effects of radiation ie. forces and torques due to scattering. }
+			{ Development and application of a state-of-the-art efficient scattering solver for irregular scatterers, modelling especially the dynamical effects of radiation. }
 			\\[-15pt]
 			\cvmetaevent
 			{Cosmic dust}
 			{}
 			{}
-			{\footnotesize Modelling shapes of dust grains and aggregates and their scattering properties is an integral part of e.g. understanding the radiative torque theory of dust and, further, the polarization of scattered and emitted light by dust.}
+			{ Modelling shapes of dust grains and aggregates and their scattering properties is an integral part of e.g. understanding the radiative torque theory of dust and, further, the polarization of scattered and emitted light by dust.}
 			\\[-15pt]
 			\cvmetaevent
 			{Optical tweezers}
 			{}
 			{}
-			{\footnotesize Full dynamical simulations allow modelling optical tweezers, where small particles can be suspended and manipulated by light.}\\[-20pt]
+			{ Full dynamical simulations allow modelling optical tweezers, where small particles can be suspended and manipulated by light.}\\[-20pt]
 			
-			\cvsection{EDUCATION}
+			\cvsection{Education}
 			\\[-15pt]
 			\cvmetaevent
 			{2016 -- Aug 2020 (planned)}
 			{PhD Astronomy}
 			{University of Helsinki}
-			{\footnotesize Research under the supervision of prof. Karri Muinonen
-			}\\[-15pt]
+			{ Research under the supervision of prof. Karri Muinonen
+			}\\[-20pt]
 			\cvmetaevent
 			{2015 -- 2016}
 			{MSc Theoretical Physics}
 			{University of Helsinki}
-			{\footnotesize \href{https://studies.helsinki.fi/instructions/article/grades-and-assessment}{Overall grade 4/5}\vspace*{2pt}
+			{ \href{https://studies.helsinki.fi/instructions/article/grades-and-assessment}{Overall grade 4/5}
 				
-				My MSc thesis, belonging to the field of astronomy, served as the starting point to my PhD research, and as such earned the grade of Laudatur.
+				My MSc thesis started my PhD research, and earned the highest grade of Laudatur.
 			}
-			\\[-15pt]
+			\\[-20pt]
 			\cvmetaevent
 			{2012 -- 2015}
 			{BSc Theoretical Physics}
 			{}
-			{University of Helsinki}\\[-30pt]
-			
-			\cvsection{Other}
-			\\[-15pt]
+			{University of Helsinki}
+			\vfill\null
+%			\newpage
+			\cvsection{Other education}
+			\\[-20pt]
 			\cvmetaevent
 			{2015 -- 2019}
 			{Subject teacher}
 			{University of Helsinki}
-			{\footnotesize Qualification for teaching Physics, Mathematics, Chemistry and IT up to the secondary level in Finland.
+			{ Qualification for teaching Physics, Mathematics, Chemistry and IT up to the secondary level in Finland.
 			}
 			
-			\cvsection{SKILLS}
+			\cvsection{Skills}
 			
-			\cvskill{\small Fortran, Python,
+			\cvskill{ Fortran, Python,
 				Matlab} {5+ yrs} {1} \\[-2pt]
 			
-			\cvskill{\small Linux, Git, \LaTeX} {4+ yrs} {0.95} \\[-2pt]
+			\cvskill{ Linux, Git, \LaTeX} {4+ yrs} {0.95} \\[-2pt]
 			
-			\cvskill{\small Html/CSS, SQL} {3+ yrs} {0.66} \\[-2pt]
+			\cvskill{ Html/CSS, SQL} {3+ yrs} {0.66} \\[-2pt]
 			
-			\cvsection{Language \\proficiency}
+			\cvsection{Language proficiency}
 			
 			\cvskill{Finnish}{Native}{} \\[-2pt]
 			
@@ -341,28 +289,29 @@
 			
 			\cvskill{Japanese}{\hspace{-40pt}Conversational}{0.4} \\[-2pt]
 			
-			\cvsection{Additional \\activities}
-			\vspace*{-15pt}
+			\cvsection{Additional activities}
+			\vspace*{-20pt}
 			\cvmetaevent
 			{2020}
 			{The Night of Science}
 			{Bad Sci-Fi Night}
-			{\small A popular science lecture on science fiction tropes and related physics.}
+			{ \vspace*{-2pt}A popular science lecture on science fiction tropes and related physics.}
 			
-			\vspace*{-15pt}
+			\vspace*{-20pt}
 			\cvmetaevent
 			{2018, 2019}
 			{International Asteroid Day}
 			{}
-			{\vspace*{4pt}\small Organizer at the Helsinki Observatory's exhibition for general public as a part of the international event.}
-			%\mbox{} % hotfix to place qrcode on the bottom when there are not other elements
+			{\vspace*{4pt} Organizer at the Helsinki Observatory's exhibition for general public as a part of the international event.}
+			\vfill\null
+%			\mbox{} % hotfix to place qrcode on the bottom when there are not other elements
 			
 		\end{leftcolumn}
 		\begin{rightcolumn}
 			
 			\fcolorbox{white}{darkcol}{\begin{minipage}[c][2.cm][c]{1\mpwidth}
 					\begin {center}
-					\huge{ \textbf{ \textcolor{white}{ \uppercase{Joonas Herranen} } } } \\[4pt]
+					\huge{ \textbf{ \textcolor{white}{ {Joonas Herranen} } } } \\[4pt]
 					\large{ \textcolor{white} {Curriculum Vitae} }
 					\end {center}
 			\end{minipage}} 
@@ -415,6 +364,7 @@
 			
 			\vspace{-25pt}
 			\cvsection{Awards and honors}
+			
 			\cvevent
 			{2016}
 			{Pro Gradu award exceptional MSc thesis}
@@ -433,13 +383,13 @@
 			
 			\cvevent
 			{2020}
-			{European Planetary Science Conference}
+			{EPSC}
 			{Virtual conference}
 			{}
 			\vspace*{-15pt}
 			\cvevent
 			{2019}
-			{European Planetary Science Conference / Annual Meeting for Division for Planetary Sciences joint conference}
+			{EPSC / DPS}
 			{Geneva, Switzerland}
 			{}
 			\vspace*{-15pt}
@@ -451,19 +401,19 @@
 			\vspace*{-15pt}
 			\cvevent
 			{2018}
-			{Electromagnetic and Light Scattering XVII / Laser-Light and Interactions with Particles 2018 joint conference}
+			{ELS XVII / Laser-Light and Interactions with Particles (LIP) 2018}
 			{College Station, TX}
 			{}
 			\vspace*{-15pt}
 			\cvevent
 			{2017}
-			{European Planetary Science Conference}
+			{EPSC}
 			{Riga, Latvia}
 			{}
 			\vspace*{-15pt}
 			\cvevent
 			{2017}
-			{Electromagnetic and Light Scattering XVI}
+			{Electromagnetic and Light Scattering (ELS) XVI}
 			{College Park, MD}
 			{}
 			\vspace*{-15pt}
@@ -475,19 +425,20 @@
 			\vspace*{-15pt}
 			\cvevent
 			{2016}
-			{Annual Meeting for Division for Planetary Sciences/ European Planetary Science Conference joint conference}
+			{Annual Meeting for Division for Planetary Sciences (DPS) / European Planetary Science Conference (EPSC)}
 			{Pasadena, CA}
 			{}
 			\vspace*{-15pt}
 			\cvevent
 			{2016}
-			{Electromagnetic Theory Symposium}
+			{Electromagnetic Theory Symposium (EMTS)}
 			{Espoo, Finland}
 			{}
 			\vspace*{-15pt}
 			
 			\vspace*{-10pt}
 			\cvsection{Teaching experience}
+			
 			\cvevent
 			{2020}
 			{Statistical Inversion Methods}
@@ -521,11 +472,12 @@
 			
 			\vspace*{-10pt}
 			\cvsection{Research experience}
+			
 			\cvevent
 			{2019}
 			{Visiting researcher}
 			{University of Wisconsin/Madison}
-			{Two-month research visit to prof. A. Lazarian, focussed on improving the predictivity of radiative torque theory.}
+			{\vspace*{-15pt}Two-month research visit to prof. A. Lazarian, focussed on improving the predictivity of radiative torque theory.}
 			\vspace*{-15pt}
 			\cvevent
 			{2016 -- 2020}

@@ -20,26 +20,12 @@
 %	
 %
 %--------------------------------------------------------------------------------------------------%
-
-
-\documentclass[10pt,A4]{article}	
-\usepackage[finnish,english]{babel}
-\usepackage[utf8x]{inputenc}
-\usepackage{url}
+\documentclass[11pt,A4]{article}	
+\usepackage[utf8]{inputenc}		
 \usepackage{xstring, xifthen}
 
-% some tex-live fonts - choose your own
+\usepackage{CormorantGaramond}
 
-%\usepackage[defaultsans]{droidsans}
-%\usepackage[default]{comfortaa}
-%\usepackage{cmbright}
-\usepackage[default]{raleway}
-%\usepackage{fetamont}
-%\usepackage[default]{gillius}
-%\usepackage[light,math]{iwona}
-%\usepackage[thin]{roboto} 
-
-\renewcommand*\familydefault{\sfdefault} 	
 \usepackage[T1]{fontenc}
 \usepackage{moresize}
 \usepackage{fontawesome}
@@ -59,8 +45,8 @@
 	\vcenteredhbox{\icon{#1}{#2}{#3}}  \hspace{2pt}  \parbox{0.9\mpwidth}{\textcolor{#4}{#3}}
 }
 
-\newcommand{\iconhref}[5]{ 						
-	\vcenteredhbox{\icon{#1}{#2}{#5}}  \hspace{2pt} \href{#4}{\textcolor{#5}{#3}}
+\newcommand{\iconhref}[4]{ 						
+	\vcenteredhbox{\icon{#1}{#2}{black}}  \hspace{2pt} \href{#4}{{#3}}
 }
 
 \newcommand{\iconemail}[5]{ 						
@@ -102,27 +88,38 @@
 
 %for drawing graphics		
 \usepackage{tikz}				
-\usetikzlibrary{shapes, backgrounds,mindmap, trees}
+\usetikzlibrary{shapes, backgrounds, mindmap, trees}
 
 \usepackage{transparent}
 \usepackage{color}
 % primary color
-\definecolor{maincol}{RGB}{ 225, 0, 0 }
+\definecolor{maincol}{RGB}{ 169, 10, 10 }
 % accent color, secondary
-% \definecolor{accentcol}{RGB}{ 250, 150, 10 }
+\definecolor{accentcol}{RGB}{ 250, 150, 10 }
 % dark color
-\definecolor{darkcol}{RGB}{ 70, 70, 70 }
+%\definecolor{darkcol}{RGB}{ 10, 100, 100 }
+\definecolor{darkcol}{rgb}{0.23, 0.27, 0.29}
 % light color
 \definecolor{lightcol}{RGB}{245,245,245}
 
 \usepackage[hidelinks]{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=darkcol,
+}
 
 % returns minipage width minus two times \fboxsep
 % to keep padding included in width calculations
 % can also be used for other boxes / environments
 \newcommand{\mpwidth}{\linewidth-\fboxsep-\fboxsep}
 
-
+%============================================================================%
+%
+%	CV COMMANDS
+%
+%============================================================================%
 \newcommand{\cvlist}[1] {
 	\begin{itemize}{#1}\end{itemize}
 }
@@ -136,14 +133,14 @@
 \newcommand{\cvsection}[1] {
 	\vspace{14pt}
 	\cvtext{
-		\textbf{\LARGE{\textcolor{darkcol}{\uppercase{#1}}}}\\[-4pt]
+		\textbf{\LARGE{\textcolor{darkcol}{{#1}}}}\\[-4pt]
 		\textcolor{maincol}{ \rule{0.1\textwidth}{2pt} } \\
 	}
 }
 
 \newcommand{\cvskill}[3] {
 	\begin{tabular*}{1\mpwidth}{p{0.72\mpwidth}  r}
-		\textcolor{black}{\textbf{#1}} & \hspace*{-10pt}\textcolor{maincol}{#2}\\
+		\textcolor{black}{\textbf{#1}} & \textcolor{maincol}{#2}\\
 	\end{tabular*}%
 	
 	\hspace{4pt}
@@ -182,12 +179,6 @@
 	\cvtext{#4}\\[10pt]
 }
 
-\newcommand{\cvqrcode}[1] {
-	\begin{center}
-		\includegraphics[width={#1}\mpwidth]{qrcode}
-	\end{center}
-}
-
 \begin{document}
 	\columnratio{0.31}
 	\setlength{\columnsep}{2.2em}
@@ -203,16 +194,16 @@
 			\icontext{MapMarker}{12}{\small Abraham Wetterin tie 14 C 37\\00880 Helsinki, Finland}{black}\\[3pt]
 			\icontext{MobilePhone}{12}{\small +358 45 356 2399}{black}\\[3pt]
 			\iconemail{Envelope}{12}{\small joonas.herranen@iki.fi}{joonas.herranen@iki.fi}{black}\\[3pt]
-			\iconhref{Github}{12}{\small github.com/jherrane}{https://github.com/jherrane}{black}\\[-15pt]
+			\iconhref{Github}{12}{\small github.com/jherrane}{https://github.com/jherrane}{}\\[-15pt]
 			
 			\cvsection{Koulutus}
-			\\[-15pt]
+			\\[-20pt]
 			\cvmetaevent
 			{2016 -- 2020}
 			{FT, Tähtitiede}
 			{Helsingin yliopisto}
 			{\footnotesize Tutkimus professori Karri Muinosen alaisuudessa.
-			}\\[-15pt]
+			}\\[-25pt]
 			\cvmetaevent
 			{2015 -- 2016}
 			{FM, teoreettinen fysiikka}
@@ -223,40 +214,39 @@
 				
 				Laudatur
 			}
-			\\[-15pt]
+			\\[-20pt]
 			\cvmetaevent
 			{2012 -- 2015}
 			{LK, teoreettinen fysiikka}
 			{}
-			{Helsingin yliopisto}\\[-35pt]
+			{Helsingin yliopisto}\\[-40pt]
 			
 			\cvmetaevent
 			{2015 -- 2019}
 			{Aineenopettaja}
 			{Helsingin yliopisto}
 			{\footnotesize Lukion ja yläkoulun fysiikka, matematiikka, kemia ja tietotekniikka.
-			}\\[-25pt]
+			}\\[-35pt]
 			
 			\cvsection{Taidot}
 			
 			\cvskill{\small Fortran, Python,
-				Matlab} {>5 vuotta} {1} \\[-2pt]
+				Matlab} {>5 vuotta} {1} \\[-5pt]
 			
-			\cvskill{\small Linux, Git, \LaTeX} {>4 vuotta} {0.95} \\[-2pt]
+			\cvskill{\small Linux, Git, \LaTeX} {>4 vuotta} {0.95} \\[-5pt]
 			
-			\cvskill{\small Html/CSS, SQL} {>3 vuotta} {0.66} \\[-2pt]
+			\cvskill{\small Html/CSS, SQL} {>3 vuotta} {0.66} \\[-5pt]
 			
-			\vspace*{-15pt}
+			\vspace*{-10pt}
 			\cvsection{Kielitaito}
 			
-			\cvskill{Suomi}{\hspace{-5pt}Äidinkieli}{} \\[-2pt]
+			\cvskill{Suomi}{\hspace{-5pt}Äidinkieli}{} \\[-5pt]
 			
-			\cvskill{Englanti}{\hspace{-20pt}Erinomainen}{0.95} \\[-2pt]
+			\cvskill{Englanti}{\hspace{-20pt}Erinomainen}{0.95} \\[-5pt]
 			
-			\cvskill{Ruotsi}{\hspace{-33pt}Virkamiesruotsi}{0.5} \\[-2pt]
+			\cvskill{Ruotsi}{\hspace{-33pt}Virkamiesruotsi}{0.5} \\[-5pt]
 			
-			\cvskill{Japani}{\hspace{-40pt}Keskustelutaidot}{0.4} \\[-2pt]
-			\newpage
+			\cvskill{Japani}{\hspace{-40pt}Keskustelutaidot}{0.4} \\[-5pt]
 			
 			\cvsection{Konferenssit}
 		
@@ -316,14 +306,14 @@
 			{}
 			\vspace*{-15pt}
 			
-			\cvsection{Tutkimus-\\kokemus}
+			\cvsection{Tutkimuskokemus}
 			
 			\cvevent
 			{2019}
 			{Tutkimusvierailu}
 			{University of Wisconsin/Madison}
 			{Kahden kuukauden vierailu prof. A. Lazarian luo, jossa kehitettiin nk. radiative torque -teorian ennustettavuutta.}
-			\vspace*{-15pt}
+			\vspace*{-5pt}
 			\cvevent
 			{2016 --}
 			{Tohtorikoulutettava}
@@ -393,7 +383,7 @@
 				
 				Herranen, J., Markkanen, J., \& Muinonen, K. 2017, \emph{\href{https://doi.org/10.1002/2017RS006333}{Dynamics of small particles in electromagnetic radiation fields: A numerical solution}}, Radio Science, 52, 1016.\\[-5pt]
 				
-				Herranen, J., Markkanen, J., \& Muinonen, K. (2016). \emph{\href{https://doi.org/10.1109/URSI-EMTS.2016.7571366}{Dynamics of Interstellar Dust Particles in Electromagnetic Radiation Fields}} in 2016 URSI INTERNATIONAL SYMPOSIUM ON ELECTROMAGNETIC THEORY (EMTS) (p. 251-254). New York: IEEE.
+				Herranen, J., Markkanen, J., \& Muinonen, K. (2016). \emph{\href{https://doi.org/10.1109/URSI-EMTS.2016.7571366}{Dynamics of Interstellar Dust Particles in Electromagnetic Radiation Fields}} in 2016 URSI International Symposium on Electromagnetic Theory (EMTS) (p. 251-254). New York: IEEE.
 				
 			}
 		
